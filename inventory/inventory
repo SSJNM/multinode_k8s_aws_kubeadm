@@ -1,0 +1,7 @@
+[default]
+
+[KubeMaster]
+mymaster ansible_host=13.235.2.179
+
+[KubeSlaves]
+

@@ -1,0 +1,101 @@
+- name: Playbook for launching Master and slave nodes
+  hosts: localhost
+  roles:
+          - ssjnm.master_slave_ec2 
+
+- name: Making entries to Inventory File for KubeMaster
+  vars:
+
+          master_node_name: KubeMaster
+          slave_nodes_name: KubeSlaves
+          inventory_dir: inventory/
+          filter_group: KubeMaster
+  hosts: localhost
+  tasks:
+          - name: Clearing all the inventories
+            command: "rm -rf inventory/*"
+
+          - name: Copying Dynamic Inventory for filtering master IP
+            template:
+                    src: "files/{{ item }}"
+                    dest: "{{ inventory_dir }}"
+                    mode: 777
+            loop:
+                     - ec2.py
+                     - ec2.ini
+                     - inventory
+
+          - meta: refresh_inventory
+          - pause:
+                  seconds: 10
+
+          - name: Making entries to Inventory File for KubeMaster
+            ini_file:
+                    path: inventory/inventory
+                    section: "{{ master_node_name }}"
+                    option: mymaster ansible_host
+                    value: "{{ groups['all'][0] }}"
+                    no_extra_spaces: yes 
+
+- name: Making entries to Inventory File for KubeSlaves
+  vars:
+          master_node_name: KubeMaster
+          slave_nodes_name: KubeSlaves
+          filter_group: KubeSlaves
+          inventory_dir: inventory/
+          slave_info:
+            - localhostname: myslave1
+              hostip: "{{ groups['all'][0] }}"
+            - localhostname: myslave2
+              hostip: "{{ groups['all'][1] }}"
+            - localhostname: myslave3
+              hostip: "{{ groups['all'][2] }}"
+
+  hosts: localhost
+  tasks:
+          - name: Copying Dynamic Inventory to filter 
+            template:
+                    src: "files/{{ item }}"
+                    dest: "{{ inventory_dir }}"
+                    mode: 777
+            loop:
+                    - ec2.py
+                    - ec2.ini
+
+          - meta: refresh_inventory                  
+          - pause:
+                  seconds: 10
+
+          - name: Making entries to Inventory File for KubeSlaves
+            ini_file:
+                    path: inventory/inventory
+                    section: "{{ slave_nodes_name }}"
+                    option: "{{ item.localhostname }} ansible_host"
+                    value: "{{ item.hostip }}"
+                    no_extra_spaces: yes
+            loop: "{{ slave_info }}"
+
+          - meta: refresh_inventory
+          - pause:
+                  seconds: 10
+
+- name: Configuring KubeMaster
+  hosts: "{{ master_node_name }}"
+  vars:
+    master_node_name: KubeMaster
+    files_path: /root/ansible/kubeadm_cloud/files
+  roles:
+  - ssjnm.kubeadm_aws_master
+     
+- name: Configuring KubeSlaves
+  hosts: "{{ slave_nodes_name }}"
+  vars:
+    slave_nodes_name: KubeSlaves
+    files_path: /root/ansible/kubeadm_cloud/files
+  roles:
+  - ssjnm.kubeadm_aws_slaves
+                       
+
+                    
+
+

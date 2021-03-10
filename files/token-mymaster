@@ -1,0 +1,1 @@
+kubeadm join 172.31.46.111:6443 --token oduyq8.n96zdr6ckqhqytu6 --discovery-token-ca-cert-hash sha256:3cc98d3261982333cb712b7e91925fc1617e08ff66e7cf3a85db8cc6579b6cbb
