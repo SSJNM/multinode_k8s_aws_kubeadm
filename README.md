@@ -110,7 +110,7 @@ Author Information
 This role was created by Nishant Singh, GitHub User - [SSJNM]
 
 
-[ssjnm.master_slave_ec2]: <>
-[ssjnm.kubeadm_aws_master]: <>
-[ssjnm.kubeadm_aws_slaves]: <>
+[ssjnm.master_slave_ec2]: <https://github.com/SSJNM/ssjnm.master_slave_ec2.git>
+[ssjnm.kubeadm_aws_master]: <https://github.com/SSJNM/ssjnm.kubeadm_aws_master.git>
+[ssjnm.kubeadm_aws_slaves]: <https://github.com/SSJNM/ssjnm.kubeadm_aws_slaves.git>
 [SSJNM]: <https://github.com/SSJNM>
