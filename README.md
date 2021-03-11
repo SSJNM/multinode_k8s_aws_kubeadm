@@ -13,7 +13,8 @@ Every detail related to roles is attached with the role itself so click on the H
 
 Algorithm
 -------------
-- First of all fill up the needed fields in vars file in all the three roles
+- Firstly download all the required roles in respective roles/ folder
+- Fill up the needed fields in vars file in all the three roles
 - Do or Don't make any changes in the playbook file
 - Make sure your AWS credentials are exported in the form of environmental variables
 - Copy the aws private key into credentials folder with chmod 600 permissions
